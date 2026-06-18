@@ -1,3 +1,13 @@
+---
+title: Revenue Leakage Detection Agent
+emoji: 💸
+colorFrom: red
+colorTo: indigo
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # Revenue Leakage Detection Agent
 
 An autonomous **multi-agent system** that finds invisible revenue loss — uninvoiced
