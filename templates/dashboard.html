@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Revenue Leakage Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+           background:#0f1117; color:#e8e8ea; margin:0; padding:24px; }
+    .wrap { max-width:980px; margin:0 auto; }
+    h1 { font-size:24px; margin:0 0 4px; }
+    .sub { color:#8a8f98; font-size:13px; margin-bottom:24px; }
+    .cards { display:flex; flex-wrap:wrap; gap:14px; margin-bottom:24px; }
+    .card { flex:1; min-width:170px; background:#1a1d27; border:1px solid #262a36;
+            border-radius:12px; padding:18px; }
+    .card .n { font-size:28px; font-weight:800; }
+    .card .t { color:#8a8f98; font-size:12px; text-transform:uppercase;
+               letter-spacing:.5px; margin-top:4px; }
+    .red { color:#ff6b6b; }
+    .panel { background:#1a1d27; border:1px solid #262a36; border-radius:12px;
+             padding:20px; margin-bottom:24px; }
+    .panel h2 { font-size:15px; margin:0 0 14px; color:#c8ccd4; }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    th,td { text-align:left; padding:10px 8px; border-bottom:1px solid #262a36; }
+    th { color:#8a8f98; font-size:12px; text-transform:uppercase; }
+    .amt { text-align:right; font-weight:700; color:#ff6b6b; white-space:nowrap; }
+    .btns { margin-bottom:24px; display:flex; gap:12px; flex-wrap:wrap; }
+    button, a.btn { background:#2563eb; color:#fff; border:none; border-radius:8px;
+             padding:10px 18px; font-size:14px; cursor:pointer; text-decoration:none; }
+    button.alt { background:#374151; }
+    #msg { margin-left:6px; color:#8a8f98; font-size:13px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Revenue Leakage Dashboard</h1>
+    <div class="sub">Autonomous multi-agent revenue audit &middot; live data from Supabase</div>
+
+    <div class="cards">
+      <div class="card"><div class="n red">${{ "{:,.0f}".format(total) }}</div>
+        <div class="t">Total Annual Leakage</div></div>
+      <div class="card"><div class="n">{{ count }}</div>
+        <div class="t">Open Findings</div></div>
+      {% for label, val in by_type.items() %}
+      <div class="card"><div class="n">${{ "{:,.0f}".format(val) }}</div>
+        <div class="t">{{ label }}</div></div>
+      {% endfor %}
+    </div>
+
+    <div class="btns">
+      <button onclick="trigger('/run-scan')">Run Scan</button>
+      <button class="alt" onclick="trigger('/generate-report')">Generate Report</button>
+      <a class="btn alt" href="/report" target="_blank">View Report</a>
+      <span id="msg"></span>
+    </div>
+
+    <div class="panel">
+      <h2>Leakage by Category</h2>
+      <canvas id="chart" height="90"></canvas>
+    </div>
+
+    <div class="panel">
+      <h2>Findings ({{ count }})</h2>
+      <table>
+        <tr><th>Customer</th><th>Issue</th><th>Detail</th><th>Est. Loss</th></tr>
+        {% for r in rows %}
+        <tr>
+          <td>{{ r.customer }}</td>
+          <td>{{ r.type }}</td>
+          <td>{{ r.note }}</td>
+          <td class="amt">${{ "{:,.2f}".format(r.amount) }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const labels = {{ chart_labels|tojson }};
+    const values = {{ chart_values|tojson }};
+    const colors = {{ chart_colors|tojson }};
+    new Chart(document.getElementById('chart'), {
+      type: 'bar',
+      data: { labels, datasets: [{ label: 'Estimated leakage ($)',
+              data: values, backgroundColor: colors, borderRadius: 6 }] },
+      options: { plugins: { legend: { display: false } },
+                 scales: { y: { ticks: { color: '#8a8f98' },
+                                grid: { color: '#262a36' } },
+                           x: { ticks: { color: '#c8ccd4' }, grid: { display: false } } } }
+    });
+
+    async function trigger(url) {
+      const msg = document.getElementById('msg');
+      msg.textContent = 'Running ' + url + ' ...';
+      try {
+        const res = await fetch(url, { method: 'POST' });
+        if (res.status === 401) { msg.textContent = 'Unauthorized (API key required).'; return; }
+        await res.json();
+        msg.textContent = 'Done. Reloading...';
+        setTimeout(() => location.reload(), 600);
+      } catch (e) { msg.textContent = 'Error: ' + e; }
+    }
+  </script>
+</body>
+</html>

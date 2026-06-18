@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="960" height="600" fill="#ffffff"/>
+  <text x="480" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">Revenue Leakage Detection Agent — Architecture</text>
+
+  <!-- ===== Center pipeline ===== -->
+  <rect x="340" y="52" width="280" height="44" rx="8" fill="#e0f2fe" stroke="#0ea5e9"/>
+  <text x="480" y="74" text-anchor="middle" font-size="12.5" fill="#0c4a6e">Trigger</text>
+  <text x="480" y="89" text-anchor="middle" font-size="10.5" fill="#0c4a6e">n8n schedule · GitHub Actions · Dashboard button</text>
+
+  <rect x="340" y="122" width="280" height="44" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+  <text x="480" y="148" text-anchor="middle" font-size="13" font-weight="600" fill="#3730a3">Flask Web API (app.py)</text>
+
+  <rect x="340" y="192" width="280" height="44" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+  <text x="480" y="218" text-anchor="middle" font-size="13" font-weight="600" fill="#3730a3">Orchestrator (run_scan.py)</text>
+
+  <rect x="340" y="266" width="280" height="38" rx="8" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="480" y="290" text-anchor="middle" font-size="12.5" fill="#1e3a8a">Agent 1 · Contract Auditor</text>
+
+  <rect x="340" y="312" width="280" height="38" rx="8" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="480" y="336" text-anchor="middle" font-size="12.5" fill="#1e3a8a">Agent 2 · Billing Anomaly</text>
+
+  <rect x="340" y="358" width="280" height="38" rx="8" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="480" y="382" text-anchor="middle" font-size="12.5" fill="#1e3a8a">Agent 3 · Tier Analyzer</text>
+
+  <rect x="340" y="436" width="280" height="46" rx="8" fill="#ffedd5" stroke="#ea580c"/>
+  <text x="480" y="463" text-anchor="middle" font-size="13" font-weight="600" fill="#9a3412">Agent 4 · Report Generator</text>
+
+  <!-- vertical chain arrows -->
+  <line x1="480" y1="96"  x2="480" y2="122" stroke="#64748b" marker-end="url(#arrow)"/>
+  <line x1="480" y1="166" x2="480" y2="192" stroke="#64748b" marker-end="url(#arrow)"/>
+  <line x1="480" y1="236" x2="480" y2="266" stroke="#64748b" marker-end="url(#arrow)"/>
+  <line x1="480" y1="304" x2="480" y2="312" stroke="#64748b" marker-end="url(#arrow)"/>
+  <line x1="480" y1="350" x2="480" y2="358" stroke="#64748b" marker-end="url(#arrow)"/>
+  <line x1="480" y1="396" x2="480" y2="436" stroke="#64748b" marker-end="url(#arrow)"/>
+
+  <!-- ===== Left: Supabase ===== -->
+  <rect x="40" y="258" width="240" height="196" rx="10" fill="#ecfdf5" stroke="#10b981"/>
+  <text x="160" y="282" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">Supabase (PostgreSQL)</text>
+  <rect x="60" y="296" width="200" height="26" rx="5" fill="#ffffff" stroke="#34d399"/>
+  <text x="160" y="313" text-anchor="middle" font-size="11.5" fill="#065f46">contracts (+ extracted_terms)</text>
+  <rect x="60" y="328" width="200" height="26" rx="5" fill="#ffffff" stroke="#34d399"/>
+  <text x="160" y="345" text-anchor="middle" font-size="11.5" fill="#065f46">invoices</text>
+  <rect x="60" y="360" width="200" height="26" rx="5" fill="#ffffff" stroke="#34d399"/>
+  <text x="160" y="377" text-anchor="middle" font-size="11.5" fill="#065f46">usage_records</text>
+  <rect x="60" y="392" width="200" height="26" rx="5" fill="#fef2f2" stroke="#f87171"/>
+  <text x="160" y="409" text-anchor="middle" font-size="11.5" fill="#991b1b">leakage_findings (output)</text>
+
+  <!-- agents <-> supabase -->
+  <line x1="340" y1="331" x2="280" y2="331" stroke="#94a3b8" marker-end="url(#arrow2)" marker-start="url(#arrow2)"/>
+  <text x="310" y="322" text-anchor="middle" font-size="10" fill="#64748b">read /</text>
+  <text x="310" y="346" text-anchor="middle" font-size="10" fill="#64748b">write</text>
+
+  <!-- ===== Right: Cerebras LLM ===== -->
+  <rect x="680" y="262" width="240" height="58" rx="10" fill="#f5f3ff" stroke="#7c3aed"/>
+  <text x="800" y="286" text-anchor="middle" font-size="13" font-weight="700" fill="#5b21b6">Cerebras LLM</text>
+  <text x="800" y="304" text-anchor="middle" font-size="11.5" fill="#5b21b6">gpt-oss-120b</text>
+
+  <!-- agent1 -> llm, report -> llm -->
+  <line x1="620" y1="285" x2="680" y2="288" stroke="#94a3b8" marker-end="url(#arrow2)"/>
+  <text x="650" y="278" text-anchor="middle" font-size="9.5" fill="#64748b">extract</text>
+  <line x1="620" y1="452" x2="680" y2="315" stroke="#94a3b8" marker-end="url(#arrow2)"/>
+  <text x="675" y="400" text-anchor="middle" font-size="9.5" fill="#64748b">summarize</text>
+
+  <!-- ===== Right: Outputs ===== -->
+  <rect x="680" y="392" width="240" height="40" rx="8" fill="#fef9c3" stroke="#ca8a04"/>
+  <text x="800" y="417" text-anchor="middle" font-size="12.5" fill="#854d0e">Email Alert (Gmail SMTP)</text>
+  <rect x="680" y="440" width="240" height="40" rx="8" fill="#f1f5f9" stroke="#475569"/>
+  <text x="800" y="465" text-anchor="middle" font-size="12.5" fill="#1e293b">Dashboard (Flask + Chart.js)</text>
+
+  <!-- report -> outputs -->
+  <line x1="620" y1="462" x2="680" y2="416" stroke="#64748b" marker-end="url(#arrow)"/>
+  <line x1="620" y1="470" x2="680" y2="460" stroke="#64748b" marker-end="url(#arrow)"/>
+
+  <text x="480" y="560" text-anchor="middle" font-size="11" fill="#94a3b8">3 detection agents find leaks · LLM reads contracts &amp; writes the summary · findings stored in Postgres · surfaced via dashboard + email</text>
+</svg>

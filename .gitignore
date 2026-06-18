@@ -1,0 +1,18 @@
+# NEVER commit secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Local generated files
+*.log
+reports/*.html
+reports/*.txt
+.DS_Store
+
+# Private: assignment brief + personal notes (keep out of the public repo)
+imps/

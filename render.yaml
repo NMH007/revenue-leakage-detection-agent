@@ -1,0 +1,29 @@
+# Render Blueprint. When you connect this repo, Render reads this file and
+# provisions the web service automatically. Secrets (sync: false) are entered
+# once in the Render dashboard -- they are NEVER committed to git.
+services:
+  - type: web
+    name: revenue-leakage-agent
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.10
+      - key: CEREBRAS_MODEL
+        value: gpt-oss-120b
+      - key: CEREBRAS_API_KEY
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: GMAIL_ADDRESS
+        sync: false
+      - key: GMAIL_APP_PASSWORD
+        sync: false
+      - key: ALERT_RECIPIENT
+        sync: false
+      - key: DASHBOARD_API_KEY
+        sync: false

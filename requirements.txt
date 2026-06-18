@@ -1,0 +1,10 @@
+# Revenue Leakage Detection Agent — Python dependencies
+# Install with:  pip install -r requirements.txt
+
+openai>=1.30.0          # LLM client. We point it at Cerebras (OpenAI-compatible API)
+supabase>=2.4.0         # Talks to your Supabase Postgres database over HTTPS
+python-dotenv>=1.0.1    # Loads secrets from the .env file into the program
+requests>=2.31.0        # Generic HTTP calls
+stripe>=9.0.0           # Pulls invoice history (test mode) for the Billing agent
+flask>=3.0.0            # The web API + dashboard
+gunicorn>=21.2.0        # Production web server used when we deploy to Render
