@@ -144,12 +144,12 @@ def generate_report_endpoint():
         result = report_generator.generate(email=email)
     except Exception as e:
         import traceback
-        traceback.print_exc()
-        return jsonify({"error": type(e).__name__, "detail": str(e),
-                        "trace": traceback.format_exc()[-1200:]}), 500
+        traceback.print_exc()  # full trace goes to the server logs, not the response
+        return jsonify({"error": type(e).__name__, "detail": str(e)}), 500
     if not result:
         return jsonify({"error": "no findings; run /run-scan first"}), 400
-    return jsonify({"total": result["total"], "summary": result["summary"]})
+    return jsonify({"total": result["total"], "summary": result["summary"],
+                    "email_sent": result.get("email_sent", False)})
 
 
 if __name__ == "__main__":

@@ -164,12 +164,20 @@ def generate(email=False):
     print("\n--- EXECUTIVE SUMMARY ---\n")
     print(summary)
 
+    email_sent = False
     if email:
-        from mailer import send_html_email
-        subject = f"Revenue Leakage Report - ${total:,.0f} detected"
-        send_html_email(subject, html)
+        try:
+            from mailer import send_html_email
+            subject = f"Revenue Leakage Report - ${total:,.0f} detected"
+            send_html_email(subject, html)
+            email_sent = True
+        except Exception as e:
+            # Some hosts (e.g. Hugging Face) block outbound SMTP. Don't fail the
+            # whole report just because the email couldn't be sent.
+            print(f"WARNING: email send failed: {e}")
 
-    return {"path": path, "html": html, "summary": summary, "total": total}
+    return {"path": path, "html": html, "summary": summary,
+            "total": total, "email_sent": email_sent}
 
 
 if __name__ == "__main__":
