@@ -99,6 +99,7 @@ def dashboard():
         chart_labels=[TYPE_LABELS[k] for k in TYPE_LABELS],
         chart_values=[by_type[k] for k in TYPE_LABELS],
         chart_colors=[CHART_COLORS[k] for k in TYPE_LABELS],
+        api_key=config.DASHBOARD_API_KEY or "",  # so the buttons can authenticate
     )
 
 

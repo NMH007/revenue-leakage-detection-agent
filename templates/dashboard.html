@@ -94,7 +94,10 @@
       const msg = document.getElementById('msg');
       msg.textContent = 'Running ' + url + ' ...';
       try {
-        const res = await fetch(url, { method: 'POST' });
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'X-API-Key': '{{ api_key }}' }
+        });
         if (res.status === 401) { msg.textContent = 'Unauthorized (API key required).'; return; }
         await res.json();
         msg.textContent = 'Done. Reloading...';
