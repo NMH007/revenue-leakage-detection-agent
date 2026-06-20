@@ -15,4 +15,5 @@ RUN pip install --no-cache-dir --user -r requirements.txt
 COPY --chown=user . .
 
 EXPOSE 7860
-CMD ["gunicorn", "-b", "0.0.0.0:7860", "app:app"]
+# --timeout 120 gives slow LLM/report requests headroom before a worker is killed.
+CMD ["gunicorn", "-b", "0.0.0.0:7860", "--timeout", "120", "app:app"]

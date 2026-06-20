@@ -31,8 +31,11 @@ def send_html_email(subject, html, recipient=None):
     msg["To"] = recipient
     msg.attach(MIMEText(html, "html"))
 
+    # timeout is critical: some hosts (e.g. Hugging Face) block outbound SMTP,
+    # and without a timeout the connect() hangs until the web worker is killed.
+    # With a timeout it fails fast and raises a normal exception we can catch.
     context = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context, timeout=15) as server:
         server.login(sender, password)
         server.sendmail(sender, recipient, msg.as_string())
 
