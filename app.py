@@ -140,7 +140,13 @@ def run_scan_endpoint():
 @require_api_key
 def generate_report_endpoint():
     email = request.args.get("email") == "1"  # /generate-report?email=1 also emails it
-    result = report_generator.generate(email=email)
+    try:
+        result = report_generator.generate(email=email)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": type(e).__name__, "detail": str(e),
+                        "trace": traceback.format_exc()[-1200:]}), 500
     if not result:
         return jsonify({"error": "no findings; run /run-scan first"}), 400
     return jsonify({"total": result["total"], "summary": result["summary"]})
